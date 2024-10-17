@@ -16,8 +16,8 @@ let mate = false;
 let board = new Board(canvas);
 let PLAYER = null;
 
-const socket = io("https://chess-nine-eta.vercel.app/");
-    
+const socket = io(window.location.origin);
+
 socket.on('connect', function() {
   console.log('Connected to the server');
 
