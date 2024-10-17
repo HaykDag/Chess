@@ -1,8 +1,9 @@
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 
-canvas.width = 560;
-canvas.width = platform === 'Mobile' ? window.innerWidth*0.7 : window.innerWidth*0.5;
+const platform = detectDevice();
+
+canvas.width = platform === 'Mobile' ? window.innerWidth*0.95 : window.innerWidth*0.35 ;
 canvas.height = canvas.width;
 const SIZE = canvas.width/8;
 
@@ -149,4 +150,22 @@ function redo(){
 
   history.offset--;
   if(history.offset===0) redoBtn.disabled = true;
+}
+
+function detectDevice() {
+  const userAgent = navigator.userAgent;
+  if (/Android|webOS|iPhone|iPad|iPod/i.test(userAgent)) {
+    return 'Mobile';
+  } else {
+    return 'Desktop';
+  }
+}
+
+function getTouchPos(canvas,e){
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.changedTouches[0];
+  const x = touch.clientX-rect.left;
+  const y = touch.clientY-rect.top;
+
+  return {x,y}
 }

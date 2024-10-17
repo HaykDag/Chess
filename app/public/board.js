@@ -3,6 +3,7 @@ class Board{
     this.canvas = canvas;
     this.cellSize = 70;
     this.grid = this.initGrid()
+    this.#addTouchEventListners(this.canvas);
     this.#addEventListners(this.canvas);
     this.legalMoves = [];
     this.selected = null;
@@ -349,8 +350,73 @@ class Board{
     this.history = {moves:[],offset:0};
   }
 
-  #addEventListners(){
-    const {canvas} = this;
+  #addTouchEventListners(canvas){
+    let dragging = false;
+    let firstTouch = null;
+    
+    canvas.addEventListener('touchstart',(e)=>{
+      e.preventDefault();
+      if(this.history.offset>0) return;
+      dragging = true;
+
+      const {x,y} = getTouchPos(canvas,e);
+      const row = Math.floor(y/SIZE);
+      const col = Math.floor(x/SIZE);
+  
+      firstTouch = {row,col};
+      const piece = this.grid[row][col];
+      
+      if(piece && piece.color===this.player && PLAYER===this.player){
+        this.selected = piece;
+        this.legalMoves = piece.legalMoves(this.grid);
+        this.legalMoves = this.blockCheck(this.selected,this.legalMoves,this.player);
+      }else{
+        if(!this.selected) return;
+        
+        this.makeMove(row,col);
+        this.selected = null;
+        this.legalMoves.length = 0; 
+      }
+    });
+
+    this.canvas.addEventListener('touchend',(e)=>{
+      if(!this.selected) return;
+      dragging = false;
+      this.dragging = false;
+      const {x,y} = getTouchPos(canvas,e);
+      const row = Math.floor(y/SIZE);
+      const col = Math.floor(x/SIZE);
+      if(firstTouch.row===row && firstTouch.col===col){
+        firstTouch = null;
+        return;
+      }
+
+      let legal = this.makeMove(row,col);
+      this.selected.clicked = false;
+
+      if(legal){
+        this.legalMoves.length = 0;
+        this.selected = null;
+      }else{
+        this.selected.pos = this.selected.oldPos;
+      } 
+    });
+
+
+    this.canvas.addEventListener('touchmove',(e)=>{
+      if(!this.selected) return;
+      const {x,y} = getTouchPos(canvas,e);
+      const row = y/SIZE;
+      const col = x/SIZE;
+        
+      this.selected.pos = {row,col};
+      this.selected.clicked = true;
+      this.dragging = true;
+       
+    });
+  }
+
+  #addEventListners(canvas){
     canvas.addEventListener('mousedown',(e)=>{
       if(this.history.offset>0) return;
       const {offsetX,offsetY} = e;
@@ -367,12 +433,9 @@ class Board{
       }else{
         if(!this.selected) return;
         
-        let legal = this.makeMove(row,col);
+        this.makeMove(row,col);
         this.selected = null;
         this.legalMoves.length = 0;
-        // if(legal){
-        //   this.player = this.player==='white' ? 'black' : 'white';
-        // }; 
       }
     });
 
@@ -388,7 +451,6 @@ class Board{
       this.dragging = false;
       this.selected.clicked = false;
       if(legal){
-        // this.player = this.player==='white' ? 'black' : 'white';
         this.legalMoves.length = 0;
         this.selected = null;
       }else{
