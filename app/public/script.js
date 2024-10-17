@@ -2,7 +2,8 @@ const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 
 canvas.width = 560;
-canvas.height = 560;
+canvas.width = platform === 'Mobile' ? window.innerWidth*0.7 : window.innerWidth*0.5;
+canvas.height = canvas.width;
 const SIZE = canvas.width/8;
 
 const restartEl = document.getElementById('restart');
