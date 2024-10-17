@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "bulids": [
+    {
+      "src": "./app/server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/app"
+    }
+  ]
+}
