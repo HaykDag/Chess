@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chess</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="http://localhost:8080/"></script>
+</head>
+<body>
+  <div class="controllers">
+    <button id="play" onclick="play()">PLay</button>
+    <button class="history-btn" id="undo" onclick="undo()">&#8617;</button>
+    <button class="history-btn" id="redo" onclick="redo()" disabled>&#8618;</button>
+  </div>
+  <div class="cnt">
+    <canvas id="myCanvas"></canvas>
+    <div class="mate" id="mate">
+      <p id="result"></p>
+      <button id="playAgain" onclick="play()">Play again</button>
+    </div>
+    <div class="wait" id="wait">
+      <p>Waiting for the opponent ...</p>
+      <button id="cancelWaiting" onclick="cancelWait()">Cancel</button>
+    </div>
+  </div>
+
+  <script src="./pieces/piece.js"></script>
+  <script src="./pieces/bishop.js"></script>
+  <script src="./pieces/king.js"></script>
+  <script src="./pieces/knight.js"></script>
+  <script src="./pieces/pawn.js"></script>
+  <script src="./pieces/queen.js"></script>
+  <script src="./pieces/rook.js"></script>
+  
+  <script src="board.js"></script>
+  <script src="script.js"></script>
+  
+</body>
+</html>

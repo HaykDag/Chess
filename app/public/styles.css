@@ -1,0 +1,103 @@
+body {
+  margin: 0;
+  background-color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.controllers {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.controllers>button {
+  margin: 5px 10px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  background-color: gold;
+  color: black;
+  font-size: large;
+  cursor: pointer;
+  user-select: none;
+}
+
+.cnt {
+  border: 10px solid rgb(178, 158, 47);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  cursor: pointer;
+}
+
+.mate,
+.wait {
+  display: none;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 150px;
+  font-size: 1.8rem;
+  color: gold;
+  background-color: rgba(0, 0, 0, 0.447);
+  border-radius: 25px;
+}
+
+.mate>p,
+.wait>p {
+  margin: 0px;
+  position: relative;
+  text-align: center;
+  top: 5px;
+}
+
+.mate>button {
+  background-color: rgb(77, 125, 94);
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 15px;
+  color: rgb(255, 255, 255);
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: 500ms;
+  box-shadow: 0.7px 0.5px 0.5px 0.5px gray;
+}
+
+.mate>button:hover {
+  background-color: rgb(38, 139, 114);
+  font-size: 1.3rem;
+}
+
+.wait {
+  width: 350px;
+  color: rgb(237, 226, 13);
+}
+
+.wait>button {
+  background-color: rgb(9, 11, 10);
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 10px;
+  color: rgb(168, 164, 164);
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: 500ms;
+  box-shadow: 0.7px 1.5px 1px 0px rgb(82, 79, 79);
+}
+
+.wait>button:hover {
+  background-color: rgb(26, 29, 29);
+  font-size: 0.85rem;
+}
