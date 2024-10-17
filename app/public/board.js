@@ -374,6 +374,7 @@ class Board{
         if(!this.selected) return;
         
         this.makeMove(row,col);
+        this.selected.clicked = false;
         this.selected = null;
         this.legalMoves.length = 0; 
       }
@@ -391,7 +392,7 @@ class Board{
         return;
       }
 
-      let legal = this.makeMove(row,col);
+      this.makeMove(row,col);
       this.selected.clicked = false;
 
       if(legal){

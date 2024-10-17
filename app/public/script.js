@@ -17,56 +17,48 @@ let clicked = false;
 let mate = false;
 let board = new Board(canvas);
 let PLAYER = null;
-
-const socket = io(window.location.origin);
-
-socket.on('connect', function() {
-  console.log('Connected to the server');
-
-});
-
-function play(){
-  if(PLAYER) return;
-  mateDiv.style.display = 'none';
-  board = new Board(canvas);
-  socket.emit("play");
-}
-
-socket.on("wait", () => {
-  waitEl.style.display = 'flex';
-  console.log('waiting for the second player');
-});
-
-socket.on("start", ({color}) => {
-  waitEl.style.display = 'none';
-  PLAYER = color;
-  if(color==='black'){
-    board.grid = board.flip();
-  }
-  console.log('start the game',color);
-});
-
-socket.on("opponent quit", () => {
-  console.log('opponent quit');
-  document.getElementById('result').innerText =  `Opponent left the game\n${PLAYER} Won!!`
-  mateDiv.style.display = 'flex';
-  PLAYER = null;
-});
-
-socket.on("move", (data) => {
-  board.oponentMove(data);
-});
-
-socket.on("opponent_castle", (data) => {
-  board.oponentCastle(data);
-});
-
-socket.on("cancelWait", (data) => {
-  console.log(data);
-});
-
+let socket = null;
 
 window.onload = ()=>{
+
+  socket = io(window.location.origin);
+  
+  socket.on('connect', function() {
+    console.log('Connected to the server');
+  });
+
+  socket.on("wait", () => {
+    waitEl.style.display = 'flex';
+    console.log('waiting for the second player');
+  });
+
+  socket.on("start", ({color}) => {
+    waitEl.style.display = 'none';
+    PLAYER = color;
+    if(color==='black'){
+      board.grid = board.flip();
+    }
+    console.log('start the game',color);
+  });
+
+  socket.on("opponent quit", () => {
+    console.log('opponent quit');
+    document.getElementById('result').innerText =  `Opponent left the game\n${PLAYER} Won!!`
+    mateDiv.style.display = 'flex';
+    PLAYER = null;
+  });
+
+  socket.on("move", (data) => {
+    board.oponentMove(data);
+  });
+
+  socket.on("opponent_castle", (data) => {
+    board.oponentCastle(data);
+  });
+
+  socket.on("cancelWait", (data) => {
+    console.log(data);
+  });
   animate()
 }
 
@@ -83,6 +75,13 @@ function animate(){
   }
   
   requestAnimationFrame(animate);
+}
+
+function play(){
+  if(PLAYER) return;
+  mateDiv.style.display = 'none';
+  board = new Board(canvas);
+  socket.emit("play");
 }
 
 function cancelWait(){
