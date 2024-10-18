@@ -8,23 +8,37 @@
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="http://localhost:8080/"></script>
 </head>
 <body>
-  <div class="controllers">
-    <button id="play" onclick="play()">PLay</button>
-    <button class="history-btn" id="undo" onclick="undo()">&#8617;</button>
-    <button class="history-btn" id="redo" onclick="redo()" disabled>&#8618;</button>
-  </div>
-  <div class="cnt">
-    <canvas id="myCanvas"></canvas>
-    <div class="mate" id="mate">
-      <p id="result"></p>
-      <button id="playAgain" onclick="play()">Play again</button>
-    </div>
-    <div class="wait" id="wait">
-      <p>Waiting for the opponent ...</p>
-      <button id="cancelWaiting" onclick="cancelWait()">Cancel</button>
-    </div>
-  </div>
+  <div class="container">
+        <div class="board-container">
+            <canvas id="chess-board"></canvas>
+            
+            <div class="timer opponent" id="opponent-timer">
+              <span style="font-size: 0.6rem;">Opponent</span>
+              <span id="opponent-timer" style="font-size: 1.5rem;">00:00</span>
+            </div>
+            <div class="timer player" id="player-timer">
+              <span style="font-size: 0.6rem;">Player</span>
+              <span id="player-timer" style="font-size: 1.5rem;">00:00</span>
+            </div>
+        </div>
 
+        <div class="controls">
+          <button id="undo" onclick="undo()">&#8617;</button>
+          <button id="play" onclick="play()">Play</button>
+          <button id="redo" onclick="redo()" disabled>&#8618;</button>
+        </div>  
+
+        <div class="mate" id="checkmate-message">
+          <p id="result"></p>
+          <button id="playAgain" onclick="play()">Play again</button>
+        </div>
+        <div class="wait" id="waiting-message">
+          <p>Waiting for the opponent ...</p>
+          <button id="cancelWaiting" onclick="cancelWait()">Cancel</button>
+        </div>
+        
+    </div>
+  
   <script src="./pieces/piece.js"></script>
   <script src="./pieces/bishop.js"></script>
   <script src="./pieces/king.js"></script>

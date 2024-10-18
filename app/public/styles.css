@@ -1,18 +1,35 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
   margin: 0;
-  background-color: gray;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: grey;
 }
 
-.controllers {
+.container {
   display: flex;
-  justify-content: center;
   align-items: center;
+  position: relative;
+  padding-left: 80px;
 }
 
-.controllers>button {
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: absolute;
+  left: 0px;
+}
+
+.controls>button {
   margin: 5px 10px;
   padding: 5px 10px;
   border-radius: 15px;
@@ -23,18 +40,74 @@ body {
   user-select: none;
 }
 
-.cnt {
-  border: 10px solid rgb(178, 158, 47);
-  border-radius: 10px;
+.board-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-right: 70px;
+}
+
+canvas {
+  border-radius: 5px;
+}
+
+.timer {
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  cursor: pointer;
+  flex-direction: column;
+}
+
+.player {
+  right: 0px;
+  bottom: 20px;
+}
+
+.opponent {
+  right: 0px;
+  top: 20px;
+}
+
+.waiting-message,
+.checkmate-message {
+  display: none;
+  margin-top: 10px;
+  font-size: 18px;
+  color: red;
+}
+
+@media (max-width: 600px) {
+
+  .container {
+    flex-direction: column;
+    padding-left: 0px;
+  }
+
+  .controls {
+    position: static;
+    flex-direction: row;
+  }
+
+  .board-container {
+    padding: 40px 0px;
+  }
+
+  .player {
+    bottom: 0px;
+    right: auto;
+    left: 30px;
+  }
+
+  .opponent {
+    top: 0px;
+    right: 30px;
+  }
+
+  .waiting-message,
+  .checkmate-message {
+    text-align: center;
+  }
 }
 
 .mate,
