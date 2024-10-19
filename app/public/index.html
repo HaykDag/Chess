@@ -12,11 +12,11 @@
         <div class="board-container">
             <canvas id="chess-board"></canvas>
             
-            <div class="timer opponent" id="opponent-timer">
+            <div class="timer opponent" >
               <span style="font-size: 0.6rem;">Opponent</span>
               <span id="opponent-timer" style="font-size: 1.5rem;">00:00</span>
             </div>
-            <div class="timer player" id="player-timer">
+            <div class="timer player" >
               <span style="font-size: 0.6rem;">Player</span>
               <span id="player-timer" style="font-size: 1.5rem;">00:00</span>
             </div>
@@ -24,7 +24,7 @@
 
         <div class="controls">
           <button id="undo" onclick="undo()">&#8617;</button>
-          <button id="play" onclick="play()">Play</button>
+          <button id="play" onclick="play()">▶</button>
           <button id="redo" onclick="redo()" disabled>&#8618;</button>
         </div>  
 
@@ -47,6 +47,7 @@
   <script src="./pieces/queen.js"></script>
   <script src="./pieces/rook.js"></script>
   
+  <script src="timer.js"></script>
   <script src="board.js"></script>
   <script src="script.js"></script>
   

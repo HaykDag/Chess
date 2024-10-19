@@ -49,6 +49,7 @@ body {
 
 canvas {
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .timer {
@@ -62,11 +63,13 @@ canvas {
 .player {
   right: 0px;
   bottom: 20px;
+  user-select: none;
 }
 
 .opponent {
   right: 0px;
   top: 20px;
+  user-select: none;
 }
 
 .waiting-message,

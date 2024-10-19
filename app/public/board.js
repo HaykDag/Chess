@@ -158,7 +158,8 @@ class Board{
           mate
         };
         socket.emit('madeMove',move);
-
+        playerTimer.pause();
+        opponentTimer.start();
         this.history.moves.push(move);
         this.player = this.player==='white' ? 'black' : 'white';
         return true;
