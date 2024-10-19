@@ -407,11 +407,23 @@ class Board{
       const row = Math.floor(y/SIZE);
       const col = Math.floor(x/SIZE);
 
-      this.makeMove(row,col);
+      if(firstTouch.row===row && firstTouch.col===col){
+        firstTouch = null;
+        this.selected.clicked = false;
+        this.selected.pos = this.selected.oldPos;
+        return;
+      }
 
-      this.selected.clicked = false;
-      this.legalMoves.length = 0;
-      this.selected = null;
+      let legal = this.makeMove(row,col);
+
+      if(legal){
+        this.selected.clicked = false;
+        this.legalMoves.length = 0;
+        this.selected = null;
+      }else{
+        this.selected.clicked = false;
+        this.selected.pos = this.selected.oldPos;
+      }
        
     });
 
