@@ -17,10 +17,10 @@ class King extends Piece{
       if(targetRow>=0 && targetRow<grid.length && targetCol>=0 && targetCol<grid.length ){
         if(grid[targetRow][targetCol]){
           if(grid[targetRow][targetCol].color !== this.color){
-            legalMoves.push(moves[i])
+            legalMoves.push(moves[i]);
           }
         }else{
-          legalMoves.push(moves[i])
+          legalMoves.push(moves[i]);
         }
       }
     }

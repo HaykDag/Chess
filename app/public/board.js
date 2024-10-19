@@ -119,7 +119,6 @@ class Board{
   }
 
   makeMove(row,col){
-
     for(const [r,c] of this.legalMoves){
       const {oldPos} = this.selected;
       const newRow = oldPos.row+r;
@@ -285,7 +284,9 @@ class Board{
   blockCheck(piece,legalMoves,player){
     const prevPlayer = player === 'white' ? 'black' : 'white';
     const moves = [];
-    for(let [r,c] of legalMoves){
+    let kingCastleMoves = [];
+    for(let i=0;i<legalMoves.length;i++){
+      const [r,c] = legalMoves[i];
       const {oldPos} = piece;
       const newRow = oldPos.row+r;
       const newCol = oldPos.col+c;
@@ -295,11 +296,30 @@ class Board{
 
       
       if(!this.isCheck(prevPlayer)){
-        moves.push([r,c])
+        moves.push([r,c]);
+
+        //if king has castling rights
+        if(Math.abs(c)===2){
+          kingCastleMoves.push([r,c,moves.length-1]);
+        }
       }
 
       this.grid[newRow][newCol] = temp;
       this.grid[oldPos.row][oldPos.col] = piece;
+    }
+    //can't castle through check, even though the final dest is unot under check
+    if(piece.type==='king' && kingCastleMoves.length>0){
+      for(let [row,col,index] of kingCastleMoves){
+        let exist = false;
+        for(const [r,c] of moves){
+          if(row===r && (col-c===1 || col-c===-3)){
+            exist = true;
+          }
+        }
+        if(!exist){
+          moves.splice(index,1)
+        }
+      }
     }
     return moves;
   }
@@ -358,8 +378,7 @@ class Board{
     canvas.addEventListener('touchstart',(e)=>{
       e.preventDefault();
       if(this.history.offset>0) return;
-      dragging = true;
-
+      
       const {x,y} = getTouchPos(canvas,e);
       const row = Math.floor(y/SIZE);
       const col = Math.floor(x/SIZE);
@@ -383,25 +402,17 @@ class Board{
 
     this.canvas.addEventListener('touchend',(e)=>{
       if(!this.selected) return;
-      dragging = false;
       this.dragging = false;
       const {x,y} = getTouchPos(canvas,e);
       const row = Math.floor(y/SIZE);
       const col = Math.floor(x/SIZE);
-      if(firstTouch.row===row && firstTouch.col===col){
-        firstTouch = null;
-        return;
-      }
 
-      let legal = this.makeMove(row,col);
+      this.makeMove(row,col);
+
       this.selected.clicked = false;
-
-      if(legal){
-        this.legalMoves.length = 0;
-        this.selected = null;
-      }else{
-        this.selected.pos = this.selected.oldPos;
-      } 
+      this.legalMoves.length = 0;
+      this.selected = null;
+       
     });
 
 
@@ -414,7 +425,6 @@ class Board{
       this.selected.pos = {row,col};
       this.selected.clicked = true;
       this.dragging = true;
-       
     });
   }
 
