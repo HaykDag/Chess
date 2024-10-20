@@ -309,15 +309,19 @@ class Board{
     }
     //can't castle through check, even though the final dest is unot under check
     if(piece.type==='king' && kingCastleMoves.length>0){
-      for(let [row,col,index] of kingCastleMoves){
+      for(let i = 0;i<kingCastleMoves.length;i++){
+        let [row,col,index] = kingCastleMoves[i];
         let exist = false;
         for(const [r,c] of moves){
-          if(row===r && (col-c===1 || col-c===-3)){
+          if(row===r && (col+c===-3 || col+c===3)){
             exist = true;
           }
         }
         if(!exist){
-          moves.splice(index,1)
+          moves.splice(index,1);
+          if(kingCastleMoves[i+1]){
+            kingCastleMoves[i+1][2]--;
+          } 
         }
       }
     }
