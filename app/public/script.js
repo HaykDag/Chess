@@ -12,16 +12,37 @@ const playBtn = document.getElementById('play');
 const mateDiv = document.getElementById("checkmate-message");
 const waitEl = document.getElementById('waiting-message');
 
+//sounds  
+const moveAudio = new Audio();
+moveAudio.src = './audio/move.mp3';
+const captureAudio = new Audio();
+captureAudio.src = './audio/capture.mp3'
+const checkAudio = new Audio();
+checkAudio.src = './audio/check.mp3';
+const checkmateAudio = new Audio();
+checkmateAudio.src = './audio/checkmate.mp3';
+const gameStartAudio = new Audio();
+gameStartAudio.src = './audio/game_start.mp3';
+const gameOverAudio = new Audio();
+gameOverAudio.src = './audio/game_over.mp3';
+
 //timer
-const duration = 3*60; // 3 minutes
+const duration = 5*60; // 3 minutes
 const playerTimer = new Timer(duration,document.getElementById('player-timer'));
 const opponentTimer = new Timer(duration,document.getElementById('opponent-timer'));
 
 let clicked = false;
 let mate = false;
+let staleMate = false;
 let board = new Board(canvas);
 let PLAYER = null;
 let socket = null;
+// const capturedPieces = [
+//   {type:'pawn',color:'white'},
+//   {type:'bishop',color:'black'},
+//   {type:'rook',color:'white'},
+//   {type:'knight',color:'black'},
+// ]
 
 window.onload = ()=>{
 
@@ -37,6 +58,7 @@ window.onload = ()=>{
   });
 
   socket.on("start", ({color}) => {
+    gameStartAudio.play();
     waitEl.style.display = 'none';
     PLAYER = color;
     if(color==='black'){
@@ -46,6 +68,7 @@ window.onload = ()=>{
   });
 
   socket.on("opponent quit", () => {
+    gameOverAudio.play();
     console.log('opponent quit');
     document.getElementById('result').innerText =  `Opponent left the game\n${PLAYER} Won!!`
     mateDiv.style.display = 'flex';
@@ -53,6 +76,7 @@ window.onload = ()=>{
   });
 
   socket.on("move", (data) => {
+    moveAudio.play();
     playerTimer.start();
     opponentTimer.pause();
     board.oponentMove(data);
@@ -60,6 +84,10 @@ window.onload = ()=>{
 
   socket.on("opponent_castle", (data) => {
     board.oponentCastle(data);
+  });
+
+  socket.on('staleMate',()=>{
+    staleMate = true;
   });
 
   socket.on("cancelWait", (data) => {
@@ -74,17 +102,27 @@ function animate(){
   board.draw(ctx);
 
   if(mate){
+    checkmateAudio.play();
     const winner = board.player==='white' ? 'Black' : 'White'
     showResult(winner,'Won by Checkmate');
     return;
   }
 
+  if(staleMate){
+    socket.emit('staleMate');
+    gameOverAudio.play();
+    showResult('Draw','by stalemate');
+    return;
+  }
+
   if(playerTimer.time<=0){
+    gameOverAudio.play();
     const winner = PLAYER==='white' ? 'Black' : 'White'
     showResult(winner,'Won by Time');
     return;
   }
   if(opponentTimer.time<=0){
+    gameOverAudio.play();
     const winner = PLAYER;
     showResult(winner,'Won by Time');
     return;

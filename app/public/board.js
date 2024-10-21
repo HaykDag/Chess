@@ -2,6 +2,9 @@ class Board{
   constructor(canvas){
     this.canvas = canvas;
     this.cellSize = 70;
+    this.lightColor = `#eeeed2`;
+    this.darkColor = `#769656`;
+    this.lastMoveColor = `#FFFF99`
     this.grid = this.initGrid()
     this.#addTouchEventListners(this.canvas);
     this.#addEventListners(this.canvas);
@@ -24,6 +27,7 @@ class Board{
   draw(ctx){
     this.drawGrid(ctx);
     if(!PLAYER) return;
+    this.drawLastMove(ctx);
     this.drawLegalMoves(ctx);
     this.drawPieces(ctx);
   }
@@ -67,6 +71,21 @@ class Board{
         }
       }
     }
+  }
+
+  drawLastMove(ctx){
+    const length = this.history.moves.length; 
+    if(length===0) return;
+    const {from,to} = this.history.moves[length-1];
+
+    ctx.beginPath();
+    ctx.rect(from.col*SIZE,from.row*SIZE,SIZE,SIZE);
+    ctx.fillStyle = this.lastMoveColor;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.rect(to.col*SIZE,to.row*SIZE,SIZE,SIZE);
+    ctx.fill();
   }
 
   drawPieces(ctx){
@@ -141,12 +160,17 @@ class Board{
         //check if pawn promoted to a queen
         this.#promotePawn(this.selected);
 
+        //check wheater opponent has a legal move
+        const hasMove = this.hasMove();
+
         //whether there is a check or mate
         if(this.checkedKing) this.checkedKing.checked = false;
         this.checkedKing = this.isCheck(this.player);
         if(this.checkedKing){
           this.checkedKing.checked = true;
-          mate = this.isMate();
+          mate = !hasMove;
+        }else{
+          staleMate = !hasMove;
         }
         
         const move = {
@@ -157,6 +181,9 @@ class Board{
           mate
         };
         socket.emit('madeMove',move);
+        //audio
+        this.#playAudio(move)
+
         playerTimer.pause();
         opponentTimer.start();
         this.history.moves.push(move);
@@ -166,6 +193,24 @@ class Board{
     }
     return false; 
   };
+
+  #playAudio({capturedPiece,mate,checkedKing}){
+    if(capturedPiece){
+      captureAudio.play();
+      if(mate){
+        checkmateAudio.play();
+      }else if(checkedKing){
+        checkAudio.play();
+      }
+    }else{
+      moveAudio.play();
+      if(mate){
+        checkmateAudio.play();
+      }else if(checkedKing){
+        checkAudio.play();
+      }
+    }
+  }
 
   oponentMove({from,to,checkedKing,mate:isMate,capturedPiece}){
     const {grid} = this;
@@ -244,6 +289,7 @@ class Board{
     if(piece.type==='pawn' && (row===0 || row===7)){
       const newQueen = new Queen(piece.color,piece.pos);
       this.grid[row][col] = newQueen;
+      //TODO - give a choise to promote whatever player wants
     }
   }
 
@@ -277,8 +323,8 @@ class Board{
   getCellColor(row,col){
     if(this.selected && this.selected.pos.row === row && this.selected.pos.col === col) return 'gold';
     if(this.hoveredCell.row === row && this.hoveredCell.col === col) return 'rgba(20, 255, 15, 0.15)';
-    if(row%2===0) return col%2===0 ? '#e0e0d3' : '#31303b';
-    return col%2===0 ? '#31303b' : '#e0e0d3';
+    if(row%2===0) return col%2===0 ? this.lightColor : this.darkColor;
+    return col%2===0 ? this.darkColor : this.lightColor;
   };
 
   blockCheck(piece,legalMoves,player){
@@ -307,7 +353,7 @@ class Board{
       this.grid[newRow][newCol] = temp;
       this.grid[oldPos.row][oldPos.col] = piece;
     }
-    //can't castle through check, even though the final dest is unot under check
+    //can't castle through check, even though the final dest is not under check
     if(piece.type==='king' && kingCastleMoves.length>0){
       for(let i = 0;i<kingCastleMoves.length;i++){
         let [row,col,index] = kingCastleMoves[i];
@@ -351,7 +397,7 @@ class Board{
     return null;
   }
 
-  isMate(){
+  hasMove(){
     const player = this.player==='white' ? 'black' : 'white'
     const {grid} = this;
     for(let row=0;row<grid.length;row++){
@@ -360,11 +406,11 @@ class Board{
         if(piece && piece.color===player){
           const legalMoves = piece.legalMoves(grid);
           const moves = this.blockCheck(piece,legalMoves,player);
-          if(moves.length>0) return false;
+          if(moves.length>0) return true;
         }
       }
     }
-    return true;
+    return false;
   }
 
   restart(){

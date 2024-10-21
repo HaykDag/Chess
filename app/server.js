@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
     });
     socket.on('cancelWait',()=>{
         if(waitingPlayer){
-            io.to(waitingPlayer).emit('cancelWait','Playing request canceled');
+            socket.emit('cancelWait','Playing request canceled');
             waitingPlayer = null;
         }
     });
@@ -58,7 +58,13 @@ io.on("connection", (socket) => {
       const dir = data.dir === 'left' ? 'right' : 'left';
 
       io.to(otherPlayer).emit('opponent_castle',{dir});
-    })
+    });
+
+    socket.on('staleMate',()=>{
+        const otherPlayer = playingMap.get(socket.id);  
+      
+        io.to(otherPlayer).emit('staleMate');
+    });
 
     socket.on("disconnect", () => {
         const otherUser = playingMap.get(socket.id);
