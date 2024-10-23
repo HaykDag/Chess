@@ -80,8 +80,8 @@ window.onload = ()=>{
 
   socket.on("move", (data) => {
     moveAudio.play();
-    playerTimer.start();
-    opponentTimer.pause();
+    playerTimer.startTimer();
+    opponentTimer.stopTimer();
     board.oponentMove(data);
   });
 

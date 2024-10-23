@@ -2,9 +2,42 @@ class Timer{
   constructor(time,el){
     this.time = time;//in seconds
     this.el = el;
-    this.intervalIds = [];
+    // this.intervalIds = [];
+    this.lastTimestamp = null;
+    this.isRunning = false;
   }
 
+  startTimer(timestamp) {
+    if (!this.isRunning) {
+      this.isRunning = true;
+      this.lastTimestamp = timestamp;
+      requestAnimationFrame(this.updateTimer.bind(this));
+    }
+}
+
+  updateTimer(timestamp) {
+    if(!this.isRunning) return;
+    
+    if (this.lastTimestamp) {
+      const elapsed = (timestamp - this.lastTimestamp) / 1000; // Elapsed time in seconds
+      this.time -= elapsed;
+      this.el.textContent = this.formatTime(Math.floor(this.time));
+    }
+    this.lastTimestamp = timestamp;
+    requestAnimationFrame(this.updateTimer.bind(this));
+  }
+
+  stopTimer() {
+    this.isRunning = false;
+    this.lastTimestamp = null;
+  }
+
+  formatTime(seconds) {
+    const minutes = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    return `${minutes}:${secs}`;
+  }
+/*
   start(){
 
     this.intervalIds.push(setInterval(()=> {
@@ -40,5 +73,5 @@ class Timer{
     this.el.innerText = `${minutes}:${seconds}`; 
     this.pause();
   }
-
+*/
 }

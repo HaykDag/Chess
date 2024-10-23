@@ -191,8 +191,8 @@ class Board{
         //audio
         this.#playAudio(move)
 
-        playerTimer.pause();
-        opponentTimer.start();
+        playerTimer.stopTimer();
+        opponentTimer.startTimer();
         this.history.moves.push(move);
         this.player = this.player==='white' ? 'black' : 'white';
         return true;
