@@ -332,7 +332,6 @@ class Board{
 
   getCellColor(row,col){
     if(this.selected && this.selected.pos.row === row && this.selected.pos.col === col) return 'gold';
-    if(this.hoveredCell.row === row && this.hoveredCell.col === col) return 'rgba(20, 255, 15, 0.15)';
     if(row%2===0) return col%2===0 ? this.lightColor : this.darkColor;
     return col%2===0 ? this.darkColor : this.lightColor;
   };
@@ -573,21 +572,25 @@ class Board{
     });
     canvas.addEventListener('mousemove',(e)=>{
       const {offsetX,offsetY} = e;
-      const row = Math.floor(offsetY/SIZE);
-      const col = Math.floor(offsetX/SIZE);
+      const x = offsetY/SIZE;
+      const y = offsetX/SIZE;
 
       if(this.mouseDown){
         this.dragging = true;
-        this.selected.pos = {row:offsetY/SIZE,col:offsetX/SIZE};
+        this.selected.pos = {row:x,col:y};
         this.selected.clicked = true;
-      }else{
-        this.hoveredCell = {row,col};
       }
     });
 
     document.addEventListener('mousemove',(e)=>{
-      if(e.target.id !== 'myCanvas') {
-        this.hoveredCell = {}
+      if(e.target.id !== 'chess-board') {
+        this.mouseDown = false;
+        this.dragging = false;
+        if(this.selected){
+          this.selected.pos = this.selected.oldPos;
+          this.selected.clicked = false;
+        }
+        
       }
     })
     
