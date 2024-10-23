@@ -1,16 +1,16 @@
-const canvas = document.getElementById('chess-board');
-const ctx = canvas.getContext('2d');
+
 
 const platform = detectDevice();
-
-canvas.width = platform === 'Mobile' ? window.innerWidth*0.95 : window.innerWidth*0.4;
-canvas.height = canvas.width;
-const SIZE = canvas.width/8;
 
 const redoBtn = document.getElementById('redo');
 const playBtn = document.getElementById('play');
 const mateDiv = document.getElementById("checkmate-message");
 const waitEl = document.getElementById('waiting-message');
+const playerInfo = document.getElementById('playerInfo');
+const opponentInfo = document.getElementById('opponentInfo');
+const opponentCapturedPieces = document.getElementById('opponent-pieces');
+const playerCapturedPieces = document.getElementById('player-pieces');
+
 
 //sounds  
 const moveAudio = new Audio();
@@ -31,20 +31,23 @@ const duration = 5*60; // 3 minutes
 const playerTimer = new Timer(duration,document.getElementById('player-timer'));
 const opponentTimer = new Timer(duration,document.getElementById('opponent-timer'));
 
+let canvas = null;
+let ctx = null;
+let SIZE = null;
 let clicked = false;
 let mate = false;
 let staleMate = false;
-let board = new Board(canvas);
+let board = null;
 let PLAYER = null;
 let socket = null;
-// const capturedPieces = [
-//   {type:'pawn',color:'white'},
-//   {type:'bishop',color:'black'},
-//   {type:'rook',color:'white'},
-//   {type:'knight',color:'black'},
-// ]
+
 
 window.onload = ()=>{
+
+  canvas = document.getElementById('chess-board');
+  ctx = canvas.getContext('2d');
+  resizeCanvas();
+  board = new Board(canvas);
 
   socket = io(window.location.origin);
   
@@ -94,7 +97,8 @@ window.onload = ()=>{
     console.log(data);
   });
 
-  animate()
+  window.addEventListener('resize', resizeCanvas);
+  animate();
 }
 
 function animate(){
@@ -220,6 +224,24 @@ function detectDevice() {
   } else {
     return 'Desktop';
   }
+}
+
+function resizeCanvas() {
+  const minSize = Math.min(window.innerHeight,window.innerWidth);
+  canvas.width = platform === 'Mobile' ? minSize*0.95 : minSize*0.85;
+  canvas.height = canvas.width;
+  SIZE = canvas.width/8;
+  const rect = canvas.getBoundingClientRect();
+  const {top,bottom} = rect;
+  
+  if(window.innerWidth<=600){
+    playerInfo.style.top = `${bottom-5}px`;
+    playerInfo.style.left = `15px`;
+    
+    opponentInfo.style.top = `${top-5-opponentInfo.clientHeight}px`;
+    opponentInfo.style.right = `15px`;
+  }
+
 }
 
 function getTouchPos(canvas,e){

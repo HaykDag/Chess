@@ -1,76 +1,109 @@
 * {
   box-sizing: border-box;
+
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 body {
   font-family: Arial, sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
   height: 100vh;
-  margin: 0;
+  width: 100vw;
+  margin: 2px;
   background-color: grey;
+  overflow: hidden;
 }
 
 .container {
-  display: flex;
-  align-items: center;
   position: relative;
-  padding-left: 80px;
+  height: 100%;
+}
+
+
+.board-container {
+  height: 100%;
+  gap: 2px;
+}
+
+canvas {
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.timer-cnt {
+  flex-direction: column;
+  justify-content: space-between;
+  height: 40%;
+}
+
+.opponent-cnt,
+.player-cnt {
+  width: 100%;
+  flex-direction: column;
+  user-select: none;
+}
+
+.pieces {
+  height: 50px;
+  width: 100%;
+  justify-content: start;
+  position: relative;
+  flex-wrap: wrap;
+  user-select: none;
+}
+
+.pieces div {
+  width: auto;
+  height: 45px;
+  position: relative;
+}
+
+.pieces div img {
+  width: auto;
+  height: 45px;
+}
+
+.pieces div span {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.timer {
+  width: 100%;
+  flex-direction: column;
+  align-items: start;
+}
+
+.player,
+.opponent {
+  user-select: none;
 }
 
 .controls {
-  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  position: absolute;
-  left: 0px;
 }
 
 .controls>button {
   margin: 5px 10px;
   padding: 5px 10px;
   border-radius: 15px;
-  background-color: gold;
+  background-color: rgb(83, 82, 71);
   color: black;
   font-size: large;
   cursor: pointer;
   user-select: none;
 }
 
-.board-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding-right: 70px;
-}
-
-canvas {
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.timer {
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.player {
-  right: 0px;
-  bottom: 20px;
-  user-select: none;
-}
-
-.opponent {
-  right: 0px;
-  top: 20px;
-  user-select: none;
-}
 
 .waiting-message,
 .checkmate-message {
@@ -82,29 +115,27 @@ canvas {
 
 @media (max-width: 600px) {
 
-  .container {
-    flex-direction: column;
-    padding-left: 0px;
+  .board-container {
+    position: relative;
+  }
+
+  .timer-cnt {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .opponent-cnt,
+  .player-cnt {
+    position: absolute;
+    width: auto;
   }
 
   .controls {
-    position: static;
+    position: absolute;
+    bottom: 10px;
     flex-direction: row;
-  }
-
-  .board-container {
-    padding: 40px 0px;
-  }
-
-  .player {
-    bottom: 0px;
-    right: auto;
-    left: 30px;
-  }
-
-  .opponent {
-    top: 0px;
-    right: 30px;
   }
 
   .waiting-message,

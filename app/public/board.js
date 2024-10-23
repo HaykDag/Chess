@@ -1,7 +1,6 @@
 class Board{
   constructor(canvas){
     this.canvas = canvas;
-    this.cellSize = 70;
     this.lightColor = `#eeeed2`;
     this.darkColor = `#769656`;
     this.lastMoveColor = `#FFFF99`
@@ -17,6 +16,10 @@ class Board{
     this.checkedKing = null;
     this.history = {moves:[],offset:0};
     this.flipped = false;
+
+    //captured pieces
+    this.playerCapturedPieces = {};
+    this.opponentCapturedPieces = {};
 
     //castle
     this.leftRookMoved = false;
@@ -180,6 +183,10 @@ class Board{
           checkedKing: this.checkedKing,
           mate
         };
+        if(capturedPiece){
+          //add piece to the DOM
+          this.#addPieceToDOM(capturedPiece);
+        }
         socket.emit('madeMove',move);
         //audio
         this.#playAudio(move)
@@ -236,6 +243,9 @@ class Board{
       checkedKing,
       mate
     };
+    if(capturedPiece){
+      this.#addPieceToDOM(capturedPiece);
+    }
     this.history.moves.push(move);
     this.player = PLAYER;
   }
@@ -421,10 +431,40 @@ class Board{
     this.history = {moves:[],offset:0};
   }
 
+   #addPieceToDOM(capturedPiece){
+    const {type,color} = capturedPiece;
+    const pieceObject = color!==PLAYER ? this.playerCapturedPieces : this.opponentCapturedPieces;
+    const pieceCnt = color!==PLAYER ? playerCapturedPieces : opponentCapturedPieces;
+
+    if(type in pieceObject){
+      pieceObject[type].count++;
+    }else{
+      pieceObject[type] = {count:1,imgSrc:`./pieces/img/${color}/${type}.png`};
+    }
+    pieceCnt.innerHTML = '';
+
+    for(const piece of Object.values(pieceObject)){
+      const imgCnt = document.createElement('div');
+      pieceCnt.appendChild(imgCnt);
+      imgCnt.style.marginLeft = `-${10}px`;
+
+      const pieceImage = document.createElement('img');
+      pieceImage.src = piece.imgSrc;
+      imgCnt.appendChild(pieceImage);
+
+      if(piece.count>1){
+        const countSpan = document.createElement('span');
+        countSpan.innerText = `X${piece.count}`;
+        const spanColor = color === 'white' ? 'black' : 'white';
+        countSpan.style.color = spanColor;
+        imgCnt.appendChild(countSpan);
+      }
+    }
+  }
+
   #addTouchEventListners(canvas){
-    let dragging = false;
     let firstTouch = null;
-    
+  
     canvas.addEventListener('touchstart',(e)=>{
       e.preventDefault();
       if(this.history.offset>0) return;
@@ -450,7 +490,7 @@ class Board{
       }
     });
 
-    this.canvas.addEventListener('touchend',(e)=>{
+    canvas.addEventListener('touchend',(e)=>{
       if(!this.selected) return;
       this.dragging = false;
       const {x,y} = getTouchPos(canvas,e);
@@ -478,7 +518,7 @@ class Board{
     });
 
 
-    this.canvas.addEventListener('touchmove',(e)=>{
+    canvas.addEventListener('touchmove',(e)=>{
       if(!this.selected) return;
       const {x,y} = getTouchPos(canvas,e);
       const row = y/SIZE;
@@ -561,7 +601,7 @@ class Board{
         return new Knight(color,pos);
       case 'bishop':
         return new Bishop(color,pos);
-      case 'Queen':
+      case 'queen':
         return new Queen(color,pos);
       case 'king':
         return new King(color,pos);

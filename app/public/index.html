@@ -9,26 +9,31 @@
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="http://localhost:8080/"></script>
 </head>
 <body>
-  <div class="container">
-        <div class="board-container">
-            <canvas id="chess-board"></canvas>
-            
-            <div class="timer opponent" >
-              <span style="font-size: 0.6rem;">Opponent</span>
-              <span id="opponent-timer" style="font-size: 1.5rem;">00:00</span>
-            </div>
-            <div class="timer player" >
-              <span style="font-size: 0.6rem;">Player</span>
-              <span id="player-timer" style="font-size: 1.5rem;">00:00</span>
+  <div class="container flex">
+        <div class="board-container flex">
+          <canvas id="chess-board"></canvas> 
+          <div class="timer-cnt flex">
+              <div class="opponent-cnt flex" id="opponentInfo">
+                <div class="flex pieces" id="opponent-pieces"></div>
+                <div class="timer opponent flex" >
+                  <span style="font-size: 1rem; padding: 5px;">Opponent</span>
+                  <span id="opponent-timer" style="font-size: 1.6rem;">00:00</span>
+                </div>
+              </div>
+              <div class="controls flex">
+                <button id="play" onclick="play()">▶</button>
+                <button id="undo" onclick="undo()">&#8617;</button>
+                <button id="redo" onclick="redo()" disabled>&#8618;</button>
+              </div> 
+              <div class="player-cnt flex" id="playerInfo">
+                <div class="timer player flex" >
+                  <span style="font-size: 1rem; padding: 5px;">Player</span>
+                  <span id="player-timer" style="font-size: 1.6rem;">00:00</span>
+                </div>
+                <div class="flex pieces" id="player-pieces"></div>
+              </div>
             </div>
         </div>
-
-        <div class="controls">
-          <button id="undo" onclick="undo()">&#8617;</button>
-          <button id="play" onclick="play()">▶</button>
-          <button id="redo" onclick="redo()" disabled>&#8618;</button>
-        </div>  
-
         <div class="mate" id="checkmate-message">
           <p id="result"></p>
           <button id="playAgain" onclick="play()">Play again</button>
