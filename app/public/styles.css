@@ -20,7 +20,7 @@ body {
 
 .container {
   position: relative;
-  height: 100%;
+  height: 100svh;
 }
 
 
@@ -97,55 +97,19 @@ canvas {
   margin: 5px 10px;
   padding: 5px 10px;
   border-radius: 15px;
-  background-color: rgb(83, 82, 71);
+  background-color: rgb(136, 160, 110);
   color: black;
   font-size: large;
   cursor: pointer;
   user-select: none;
 }
 
+#draw {
+  font-size: 12px;
+}
 
 .waiting-message,
 .checkmate-message {
-  display: none;
-  margin-top: 10px;
-  font-size: 18px;
-  color: red;
-}
-
-@media (max-width: 600px) {
-
-  .board-container {
-    position: relative;
-  }
-
-  .timer-cnt {
-    position: absolute;
-    bottom: 0;
-    height: 100%;
-    width: 100%;
-  }
-
-  .opponent-cnt,
-  .player-cnt {
-    position: absolute;
-    width: auto;
-  }
-
-  .controls {
-    position: absolute;
-    bottom: 10px;
-    flex-direction: row;
-  }
-
-  .waiting-message,
-  .checkmate-message {
-    text-align: center;
-  }
-}
-
-.mate,
-.wait {
   display: none;
   justify-content: space-around;
   align-items: center;
@@ -160,17 +124,18 @@ canvas {
   color: gold;
   background-color: rgba(0, 0, 0, 0.447);
   border-radius: 25px;
+  z-index: 6;
 }
 
-.mate>p,
-.wait>p {
+.checkmate-message>p,
+.waiting-message>p {
   margin: 0px;
   position: relative;
   text-align: center;
   top: 5px;
 }
 
-.mate>button {
+.checkmate-message>button {
   background-color: rgb(77, 125, 94);
   font-size: 1.2rem;
   border: none;
@@ -179,21 +144,21 @@ canvas {
   padding: 10px 15px;
   cursor: pointer;
   transition: 500ms;
-  box-shadow: 0.7px 0.5px 0.5px 0.5px gray;
+  box-shadow: 0.7px 0.5px 0.5px 0.5px rgb(11, 211, 27);
 }
 
-.mate>button:hover {
+.checkmate-message>button:hover {
   background-color: rgb(38, 139, 114);
   font-size: 1.3rem;
 }
 
-.wait {
+.waiting-message {
   width: 350px;
   color: rgb(237, 226, 13);
 }
 
-.wait>button {
-  background-color: rgb(9, 11, 10);
+.waiting-message>button {
+  background-color: rgb(70, 131, 101);
   font-size: 0.8rem;
   border: none;
   border-radius: 10px;
@@ -201,10 +166,41 @@ canvas {
   padding: 5px 10px;
   cursor: pointer;
   transition: 500ms;
-  box-shadow: 0.7px 1.5px 1px 0px rgb(82, 79, 79);
+  box-shadow: 0.7px 1.5px 1px 0px rgb(54, 146, 43);
 }
 
-.wait>button:hover {
+.waiting-message>button:hover {
   background-color: rgb(26, 29, 29);
   font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+
+  .board-container {
+    position: relative;
+  }
+
+  .timer-cnt {
+    position: absolute;
+    bottom: 0;
+    height: 100svh;
+    width: 100%;
+  }
+
+  .opponent-cnt,
+  .player-cnt {
+    position: absolute;
+    width: auto;
+  }
+
+  .controls {
+    position: absolute;
+    bottom: 30px;
+    flex-direction: row;
+  }
+
+  .waiting-message,
+  .checkmate-message {
+    text-align: center;
+  }
 }

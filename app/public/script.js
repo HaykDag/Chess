@@ -4,6 +4,7 @@ const platform = detectDevice();
 
 const redoBtn = document.getElementById('redo');
 const playBtn = document.getElementById('play');
+const drawBtn = document.getElementById('draw');
 const mateDiv = document.getElementById("checkmate-message");
 const waitEl = document.getElementById('waiting-message');
 const playerInfo = document.getElementById('playerInfo');
@@ -37,6 +38,7 @@ let SIZE = null;
 let clicked = false;
 let mate = false;
 let staleMate = false;
+let draw = false;
 let board = null;
 let PLAYER = null;
 let socket = null;
@@ -93,6 +95,39 @@ window.onload = ()=>{
     staleMate = true;
   });
 
+  socket.on('drawDeclined',()=>{
+    drawBtn.innerText = 'Draw';
+    drawBtn.style.backgroundColor = 'rgb(136, 160, 110);'
+    drawBtn.onclick = offerDraw;
+  });
+
+  socket.on('drawOffered',()=>{
+    drawBtn.disabled = false;
+    drawBtn.innerText = 'Accept draw';
+    drawBtn.style.backgroundColor = 'red';
+    drawBtn.onclick = acceptDraw;
+
+    setTimeout(()=>{
+      drawBtn.innerText = 'Draw';
+      drawBtn.style.backgroundColor = 'rgb(136, 160, 110);'
+      drawBtn.onclick = offerDraw;
+      socket.emit('drawDeclined');
+    },5000);
+  });
+
+  socket.on('drawAccepted',()=>{
+    drawBtn.innerText = 'Draw accepted';
+    drawBtn.style.backgroundColor = 'rgb(136, 160, 110);'
+    draw.disabled = true;
+    showResult('Draw','by agreement');
+    draw = true;
+  });
+  socket.on('drawDeclined',()=>{
+    drawBtn.innerText = 'Draw';
+    drawBtn.style.backgroundColor = 'rgb(136, 160, 110)';
+    drawBtn.onclick = offerDraw;
+  });
+
   socket.on("cancelWait", (data) => {
     console.log(data);
   });
@@ -102,6 +137,8 @@ window.onload = ()=>{
 }
 
 function animate(){
+  if(draw) return;
+
   ctx.clearRect(0,0,canvas.width,canvas.height);
   board.draw(ctx);
 
@@ -140,7 +177,26 @@ function play(){
   mateDiv.style.display = 'none';
   board = new Board(canvas);
   playBtn.style.display = 'none';
+  drawBtn.disabled = false;
   socket.emit("play");
+}
+
+function offerDraw(){
+  if(!PLAYER) return;
+  drawBtn.innerText = 'Draw offered';
+  draw.disabled = true;
+  socket.emit('offerDraw');
+}
+
+function acceptDraw(){
+  if(!PLAYER) return;
+  drawBtn.innerText = 'Draw accepted';
+  drawBtn.style.backgroundColor = 'rgb(136, 160, 110)';
+  draw.disabled = true;
+  socket.emit('accetpDraw');
+  showResult('Draw','by agreement');
+  draw = true;
+
 }
 
 function cancelWait(){

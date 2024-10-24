@@ -66,6 +66,19 @@ io.on("connection", (socket) => {
         io.to(otherPlayer).emit('staleMate');
     });
 
+    socket.on('offerDraw',()=>{
+        const otherPlayer = playingMap.get(socket.id);
+        io.to(otherPlayer).emit('drawOffered');
+    });
+    socket.on('accetpDraw',()=>{
+        const otherPlayer = playingMap.get(socket.id);
+        io.to(otherPlayer).emit('drawAccepted');
+    });
+    socket.on('drawDeclined',()=>{
+        const otherPlayer = playingMap.get(socket.id);
+        io.to(otherPlayer).emit('drawDeclined');
+    });
+
     socket.on("disconnect", () => {
         const otherUser = playingMap.get(socket.id);
         playingMap.delete(socket.id);

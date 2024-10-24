@@ -10,40 +10,42 @@
 </head>
 <body>
   <div class="container flex">
-        <div class="board-container flex">
-          <canvas id="chess-board"></canvas> 
-          <div class="timer-cnt flex">
-              <div class="opponent-cnt flex" id="opponentInfo">
-                <div class="flex pieces" id="opponent-pieces"></div>
-                <div class="timer opponent flex" >
-                  <span style="font-size: 1rem; padding: 5px;">Opponent</span>
-                  <span id="opponent-timer" style="font-size: 1.6rem;">00:00</span>
-                </div>
-              </div>
-              <div class="controls flex">
-                <button id="play" onclick="play()">▶</button>
-                <button id="undo" onclick="undo()">&#8617;</button>
-                <button id="redo" onclick="redo()" disabled>&#8618;</button>
-              </div> 
-              <div class="player-cnt flex" id="playerInfo">
-                <div class="timer player flex" >
-                  <span style="font-size: 1rem; padding: 5px;">Player</span>
-                  <span id="player-timer" style="font-size: 1.6rem;">00:00</span>
-                </div>
-                <div class="flex pieces" id="player-pieces"></div>
-              </div>
+    <div class="board-container flex">
+      <canvas id="chess-board"></canvas> 
+      <div class="timer-cnt flex">
+          <div class="opponent-cnt flex" id="opponentInfo">
+            <div class="flex pieces" id="opponent-pieces"></div>
+            <div class="timer opponent flex" >
+              <span style="font-size: 1rem; padding: 5px;">Opponent</span>
+              <span id="opponent-timer" style="font-size: 1.6rem;">00:00</span>
             </div>
+          </div>
+          <div class="controls flex">
+            <button id="play" onclick="play()">▶</button>
+            <button id="draw" onclick="offerDraw()" disabled>Draw</button>
+            <button id="undo" onclick="undo()">&#8617;</button>
+            <button id="redo" onclick="redo()" disabled>&#8618;</button>
+          </div> 
+          <div class="player-cnt flex" id="playerInfo">
+            <div class="timer player flex" >
+              <span style="font-size: 1rem; padding: 5px;">Player</span>
+              <span id="player-timer" style="font-size: 1.6rem;">00:00</span>
+            </div>
+            <div class="flex pieces" id="player-pieces"></div>
+          </div>
         </div>
-        <div class="mate" id="checkmate-message">
-          <p id="result"></p>
-          <button id="playAgain" onclick="play()">Play again</button>
-        </div>
-        <div class="wait" id="waiting-message">
-          <p>Waiting for the opponent ...</p>
-          <button id="cancelWaiting" onclick="cancelWait()">Cancel</button>
-        </div>
-        
     </div>
+
+    <div class="checkmate-message" id="checkmate-message">
+      <p id="result"></p>
+      <button id="playAgain" onclick="play()">Play again</button>
+    </div>
+    <div class="waiting-message" id="waiting-message">
+      <p>Waiting for the opponent ...</p>
+      <button id="cancelWaiting" onclick="cancelWait()">Cancel</button>
+    </div>
+        
+  </div>
   
   <script src="./pieces/piece.js"></script>
   <script src="./pieces/bishop.js"></script>
