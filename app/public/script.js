@@ -109,10 +109,10 @@ window.onload = ()=>{
 
     setTimeout(()=>{
       drawBtn.innerText = 'Draw';
-      drawBtn.style.backgroundColor = 'rgb(136, 160, 110);'
+      drawBtn.style.backgroundColor = 'rgb(136, 160, 110)';
       drawBtn.onclick = offerDraw;
       socket.emit('drawDeclined');
-    },5000);
+    },7000);
   });
 
   socket.on('drawAccepted',()=>{
