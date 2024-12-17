@@ -178,6 +178,10 @@ function play(){
   board = new Board(canvas);
   playBtn.style.display = 'none';
   drawBtn.disabled = false;
+  playerTimer.reset();
+  opponentTimer.reset();
+  document.getElementById('player-pieces').innerHTML = '';
+  document.getElementById('opponent-pieces').innerHTML = '';
   socket.emit("play");
 }
 

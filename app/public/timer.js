@@ -1,5 +1,6 @@
 class Timer{
   constructor(time,el){
+    this.originalTime = time;
     this.time = time;//in seconds
     this.el = el;
     this.intervalIds = [];
@@ -32,6 +33,12 @@ class Timer{
       clearInterval(intervalId);
     }
     this.intervalIds.length = 0;
+  }
+
+  reset(){
+    this.time = this.originalTime;
+    this.el.textContent = this.formatTime(Math.floor(this.time));
+    this.stopTimer();
   }
 
   formatTime(seconds) {
